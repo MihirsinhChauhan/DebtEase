@@ -1,3 +1,6 @@
 [submodule "client"]
 	path = client
 	url = https://github.com/MihirsinhChauhan/debtease-frontend.git
+[submodule "server"]
+	path = server
+	url = https://github.com/MihirsinhChauhan/ai-agents-server.git
