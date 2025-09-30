@@ -1,0 +1,1115 @@
+{
+	"info": {
+		"_postman_id": "93cece80-573f-4684-bcfb-33d9c4972644",
+		"name": "DebtEase API - Complete Testing Collection",
+		"description": "Comprehensive API testing collection for DebtEase application. Tests all critical functionality including authentication, debt management, AI insights, and onboarding.\n\n**Testing Order:**\n1. Health Check\n2. User Registration\n3. User Login\n4. User Profile\n5. Debt Management (CRUD)\n6. AI Insights\n7. Onboarding Flow\n\n**Variables Used:**\n- {{baseUrl}} - Server base URL (default: http://127.0.0.1:8000)\n- {{access_token}} - Authentication token (auto-set from login)\n- {{user_id}} - Current user ID (auto-set from login)\n- {{debt_id}} - Created debt ID (auto-set from debt creation)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42366877"
+	},
+	"item": [
+		{
+			"name": "1. Health & Status",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Root",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2. Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    if (response.access_token) {",
+									"        pm.collectionVariables.set('access_token', response.access_token);",
+									"        pm.collectionVariables.set('user_id', response.user.id);",
+									"        console.log('✅ Registration successful, token set');",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@debtease.com\",\n    \"password\": \"TestPass123!\",\n    \"full_name\": \"Test User\",\n    \"monthly_income\": 5000.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User (Form)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    if (response.access_token) {",
+									"        pm.collectionVariables.set('access_token', response.access_token);",
+									"        pm.collectionVariables.set('user_id', response.user.id);",
+									"        console.log('✅ Login successful, token set');",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "test@debtease.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "TestPass123!",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login/form",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login",
+								"form"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Session",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/verify-session",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"verify-session"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Extend Session",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/extend-session?hours=24",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"extend-session"
+							],
+							"query": [
+								{
+									"key": "hours",
+									"value": "24"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3. Debt Management",
+			"item": [
+				{
+					"name": "Get All Debts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/debts/?active_only=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"debts",
+								""
+							],
+							"query": [
+								{
+									"key": "active_only",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Debt",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    if (response.id) {",
+									"        pm.collectionVariables.set('debt_id', response.id);",
+									"        console.log('✅ Debt created successfully, ID set');",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"HDFC Credit Card\",\n    \"debt_type\": \"credit_card\",\n    \"principal_amount\": 100000.00,\n    \"current_balance\": 45000.00,\n    \"interest_rate\": 18.5,\n    \"is_variable_rate\": false,\n    \"minimum_payment\": 2250.00,\n    \"due_date\": \"2025-10-15\",\n    \"lender\": \"HDFC Bank\",\n    \"remaining_term_months\": 24,\n    \"is_tax_deductible\": false,\n    \"payment_frequency\": \"monthly\",\n    \"is_high_priority\": true,\n    \"notes\": \"Main credit card for daily expenses\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/debts/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"debts",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Debt by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/debts/{{debt_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"debts",
+								"{{debt_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Debt",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"HDFC Credit Card (Updated)\",\n    \"current_balance\": 42000.00,\n    \"minimum_payment\": 2100.00,\n    \"notes\": \"Updated balance after payment\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/debts/{{debt_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"debts",
+								"{{debt_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Debt Summary",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/debts/summary",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"debts",
+								"summary"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get High Priority Debts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/debts/high-priority",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"debts",
+								"high-priority"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Record Payment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 3000.00,\n    \"payment_date\": \"2025-09-25\",\n    \"principal_portion\": 2200.00,\n    \"interest_portion\": 800.00,\n    \"notes\": \"Monthly payment - September\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/debts/{{debt_id}}/payment",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"debts",
+								"{{debt_id}}",
+								"payment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Payment Reminders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/debts/reminders?days_ahead=7",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"debts",
+								"reminders"
+							],
+							"query": [
+								{
+									"key": "days_ahead",
+									"value": "7"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "4. AI Insights & Analytics",
+			"item": [
+				{
+					"name": "Get AI Insights",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/ai/insights?include_dti=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ai",
+								"insights"
+							],
+							"query": [
+								{
+									"key": "include_dti",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Enhanced AI Insights",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/ai/insights/enhanced?monthly_payment_budget=5000&preferred_strategy=avalanche",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ai",
+								"insights",
+								"enhanced"
+							],
+							"query": [
+								{
+									"key": "monthly_payment_budget",
+									"value": "5000"
+								},
+								{
+									"key": "preferred_strategy",
+									"value": "avalanche"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get AI Insights Status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/ai/insights/status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ai",
+								"insights",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh AI Insights",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/ai/insights/refresh?force=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ai",
+								"insights",
+								"refresh"
+							],
+							"query": [
+								{
+									"key": "force",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get AI Recommendations",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/ai/recommendations",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ai",
+								"recommendations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Compare Strategies",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/ai/strategies/compare?monthly_payment=4500",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ai",
+								"strategies",
+								"compare"
+							],
+							"query": [
+								{
+									"key": "monthly_payment",
+									"value": "4500"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get DTI Analysis",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/ai/dti",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ai",
+								"dti"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Simulate Payment Scenarios",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"scenarios\": [\n        {\n            \"monthly_payment\": 4000.00,\n            \"strategy\": \"avalanche\"\n        },\n        {\n            \"monthly_payment\": 5000.00,\n            \"strategy\": \"snowball\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/ai/simulate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ai",
+								"simulate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Payment Timeline",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/ai/timeline?monthly_payment=4000&strategy=avalanche",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ai",
+								"timeline"
+							],
+							"query": [
+								{
+									"key": "monthly_payment",
+									"value": "4000"
+								},
+								{
+									"key": "strategy",
+									"value": "avalanche"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Calculate Optimization Metrics",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"current_strategy\": {\n        \"monthly_payment\": 3000.00,\n        \"strategy\": \"minimum_payments\"\n    },\n    \"optimized_strategy\": {\n        \"monthly_payment\": 4500.00,\n        \"strategy\": \"avalanche\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/ai/optimize",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ai",
+								"optimize"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get AI Worker Queue Status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/ai/queue/status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ai",
+								"queue",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalidate AI Cache",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/ai/insights/cache",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ai",
+								"insights",
+								"cache"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "5. Onboarding",
+			"item": [
+				{
+					"name": "Start Onboarding",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/onboarding/start",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"onboarding",
+								"start"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Onboarding Status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/onboarding/status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"onboarding",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile (Onboarding)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"income_frequency\": \"MONTHLY\",\n    \"employment_status\": \"FULL_TIME\",\n    \"financial_experience\": \"INTERMEDIATE\",\n    \"monthly_income\": 5500.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/onboarding/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"onboarding",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set Goals",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"target_debt_free_date\": \"2027-09-25\",\n    \"monthly_payment_budget\": 4000.00,\n    \"priority_goals\": [\"reduce_interest\", \"debt_free_fast\"]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/onboarding/goals",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"onboarding",
+								"goals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Complete Onboarding",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/onboarding/complete",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"onboarding",
+								"complete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "6. Payment Management",
+			"item": [
+				{
+					"name": "Get Payment History",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/payments/history",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"history"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Payment History by Debt",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/payments/history?debt_id={{debt_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"history"
+							],
+							"query": [
+								{
+									"key": "debt_id",
+									"value": "{{debt_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "7. Cleanup (Optional)",
+			"item": [
+				{
+					"name": "Delete Debt",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/debts/{{debt_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"debts",
+								"{{debt_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://127.0.0.1:8000",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "debt_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

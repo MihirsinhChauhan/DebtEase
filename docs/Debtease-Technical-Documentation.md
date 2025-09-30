@@ -2,11 +2,11 @@
 
 ## Table of Contents
 
-1. [Executive Summary](#1-executive-summary)
+1. [Executive Summary](#1-executive-summary) *(Updated to match current implementation)*
 2. [High-Level Overview](#2-high-level-overview)
-3. [Project Workings](#3-project-workings)
+3. [Project Workings](#3-project-workings) *(Clarified flow vs sequence diagrams)*
 4. [Data Models](#4-data-models)
-5. [Key Implementation Details](#5-key-implementation-details)
+5. [Key Implementation Details](#5-key-implementation-details) *(Added Pydantic AI details)*
 6. [Appendices](#6-appendices)
 
 ---
@@ -38,19 +38,8 @@ Debtease addresses these challenges through an intelligent platform that serves 
 **📊 Comprehensive Financial Insights**
 - Real-time debt-to-income (DTI) analysis and risk assessment
 - Personalized spending pattern analysis and saving opportunities
-- Credit score monitoring and improvement recommendations
 - Multi-dimensional financial health scoring
 
-**🎮 Gamified Experience**
-- Achievement system with debt-free milestones and progress tracking
-- Motivational nudges and contextual coaching
-- Social features and community support for sustained engagement
-
-**🤖 AI-Driven Coaching**
-- Personalized financial advice based on individual circumstances
-- Goal-oriented planning for major life events (home purchase, education, retirement)
-- Behavioral insights to break negative financial patterns
-- Continuous learning from user behavior and outcomes
 
 ### Target Audience
 
@@ -60,17 +49,13 @@ Debtease addresses these challenges through an intelligent platform that serves 
 - Families managing household debt and planning for future goals
 - Individuals recovering from financial setbacks (divorce, medical issues, job loss)
 
-**Secondary Users:**
-- Financial advisors seeking sophisticated client management tools
-- Credit counselors requiring advanced analysis capabilities
-- Financial educators looking for interactive teaching platforms
 
 ### Technology Leadership
 
 Debtease differentiates itself through:
 
 **Advanced AI Architecture**
-- Multi-agent AI system using LangGraph for complex financial reasoning
+- Multi-agent AI system using LangGraph and Pyandantic ai for complex financial reasoning
 - Proprietary algorithms for debt optimization and risk assessment
 - Real-time AI processing with intelligent caching for performance
 - Background processing queues for scalable AI operations
@@ -81,32 +66,18 @@ Debtease differentiates itself through:
 - PostgreSQL with advanced caching and analytics capabilities
 - Real-time WebSocket connections for live updates
 
-**Security & Privacy First**
-- Bank-grade AES-256 encryption for sensitive financial data
-- Privacy-first design with granular user consent management
-- Regular security audits and compliance monitoring
-- Secure API integrations with financial institutions
-
-### Competitive Advantages
-
-1. **AI Depth**: Most comprehensive AI-driven debt analysis in the market
-2. **Holistic Approach**: Addresses debt, budgeting, saving, and wealth building
-3. **Real-time Intelligence**: Live scenario simulation and dynamic recommendations
-4. **User Experience**: Gamified, engaging interface that maintains long-term usage
-5. **Scalability**: Background AI processing supporting thousands of concurrent users
-
 ### Business Impact & Goals
 
 Debtease aims to:
-- **Help users pay off $500M+ in debt** within the first 3 years
-- **Achieve 70% user retention** through engaging, value-driven features
-- **Process 10M+ AI recommendations** annually
-- **Reduce average debt payoff time by 25%** through optimized strategies
-- **Build a sustainable business** serving both individual users and financial professionals
+- **Provide accurate AI-powered debt analysis** and repayment optimization
+- **Deliver reliable financial insights** through Groq API integration
+- **Build a user-friendly platform** for debt management and tracking
+- **Establish a solid foundation** for future feature expansion
+- **Create a sustainable MVP** demonstrating AI-driven financial tools
 
 ### Market Opportunity
 
-The debt management software market is projected to reach $2.5B by 2027, with AI-driven financial wellness representing a high-growth segment. Debtease positions itself at the intersection of personal finance, behavioral economics, and artificial intelligence, offering a differentiated solution in a crowded but underserved market.
+The debt management software market represents an opportunity to provide accessible, AI-enhanced financial tools. Debtease serves as a proof-of-concept for AI-driven debt analysis and optimization, establishing a foundation for future expansion in the financial wellness space.
 
 ---
 
@@ -116,78 +87,63 @@ The debt management software market is projected to reach $2.5B by 2027, with AI
 
 Debtease operates within a broader financial technology ecosystem, interacting with external systems while maintaining clear boundaries for security and compliance.
 
-```plantuml
-@startuml System Context Diagram
-!include <C4/C4_Context>
+```mermaid
+graph TD
+    %% External Actors
+    A[Individual User<br/>Person seeking debt management<br/>and financial guidance]
+    B[Financial Advisor<br/>Professional providing<br/>financial advice]
 
-Person(user, "Individual User", "Person seeking debt management and financial guidance")
-Person(advisor, "Financial Advisor", "Professional providing financial advice")
+    %% System Boundary
+    subgraph "Debtease Platform"
+        D[Debtease Platform<br/>AI-powered debt management<br/>and financial wellness platform]
+    end
 
-System(debtease, "Debtease Platform", "AI-powered debt management and financial wellness platform")
+    %% External Systems
+    C[Groq API<br/>Large language model for AI insights]
 
-System_Ext(banks, "Financial Institutions", "Banks, credit card companies, lenders")
-System_Ext(plaid, "Plaid API", "Financial data aggregation service")
-System_Ext(openai, "OpenAI API", "Large language model for AI insights")
-System_Ext(email, "Email Service", "SendGrid/Twilio for notifications")
-System_Ext(blockchain, "Blockchain Network", "Optional decentralized identity and smart contracts")
 
-Rel(user, debtease, "Uses", "HTTPS/WebSocket")
-Rel(advisor, debtease, "Manages clients", "HTTPS")
+    %% Relationships
+    A -->|Uses<br/>HTTPS/WebSocket| D
+    B -->|Manages clients<br/>HTTPS| D
 
-Rel(debtease, banks, "Aggregates debt data", "API/Plaid")
-Rel(debtease, plaid, "Fetches financial data", "REST API")
-Rel(debtease, openai, "Generates AI insights", "REST API")
-Rel(debtease, email, "Sends notifications", "SMTP/API")
-Rel(debtease, blockchain, "Stores immutable records", "Web3")
+    C -->|Generates AI insights<br/>REST API| D
 
-@enduml
 ```
 
 **Key External Dependencies:**
-- **Financial Institutions**: Primary source of debt and transaction data
-- **Plaid**: Secure financial data aggregation (sandbox environment for development)
-- **OpenAI**: Core AI intelligence for debt analysis and recommendations
-- **Email/SMS Services**: User notifications and reminders
-- **Blockchain**: Optional decentralized features for immutable records
+- **Groq API**: Core AI intelligence for debt analysis and recommendations
 
 ### Container Diagram (C4)
 
 The platform follows a modern microservices-inspired architecture with clear separation of concerns.
 
-```plantuml
-@startuml Container Diagram
-!include <C4/C4_Container>
+```mermaid
+graph TB
+    %% External Actor
+    U[User<br/>Web/Mobile application user]
 
-Person(user, "User", "Web/Mobile application user")
+    %% External Systems
+    GRQ[Groq API<br/>External AI service]
 
-System_Boundary(debtease, "Debtease Platform") {
-    Container(frontend, "React SPA", "TypeScript, React", "Modern web application with PWA capabilities")
-    Container(backend, "FastAPI Backend", "Python, FastAPI", "REST API and WebSocket server")
-    Container(ai_agents, "AI Agents", "Python, LangGraph", "Specialized AI agents for financial analysis")
-    Container(database, "PostgreSQL Database", "PostgreSQL", "Primary data storage with advanced features")
-    Container(cache, "Redis Cache", "Redis", "High-performance caching layer")
-    Container(queue, "Background Queue", "Redis Queue", "Asynchronous job processing")
-}
+    %% System Boundary
+    subgraph "Debtease Platform"
+        FE[React SPA<br/>TypeScript, React<br/>Modern web application<br/>with PWA capabilities]
+        BE[FastAPI Backend<br/>Python, FastAPI<br/>REST API and WebSocket server]
+        AI[AI Agents<br/>Python, LangGraph<br/>Specialized AI agents<br/>for financial analysis]
+        DB[PostgreSQL Database<br/>PostgreSQL<br/>Primary data storage<br/>and AI caching]
+        QU[Background Queue<br/>Database Queue<br/>Asynchronous job<br/>processing]
+    end
 
-System_Ext(openai, "OpenAI API", "External AI service")
-System_Ext(plaid, "Plaid API", "Financial data aggregation")
-System_Ext(email, "Email Service", "Notification delivery")
+    %% Relationships
+    U -->|Uses<br/>HTTPS| FE
 
-Rel(user, frontend, "Uses", "HTTPS")
+    FE -->|API Calls<br/>REST/GraphQL + WebSocket| BE
+    BE -->|CRUD Operations<br/>SQL| DB
+    BE -->|Job Queuing<br/>SQL| QU
 
-Rel(frontend, backend, "API Calls", "REST/GraphQL + WebSocket")
-Rel(backend, database, "CRUD Operations", "SQL")
-Rel(backend, cache, "Cache Operations", "Redis Protocol")
-Rel(backend, queue, "Job Queuing", "Redis")
-
-Rel(ai_agents, backend, "Integration", "Internal API")
-Rel(ai_agents, database, "Data Access", "SQLAlchemy")
-Rel(ai_agents, openai, "AI Processing", "REST API")
-
-Rel(backend, plaid, "Data Aggregation", "REST API")
-Rel(backend, email, "Notifications", "SMTP/API")
-
-@enduml
+    AI -->|Integration<br/>Internal API| BE
+    AI -->|Data Access<br/>SQLAlchemy| DB
+    AI -->|AI Processing<br/>REST API| GRQ
 ```
 
 ### Core Workflows
@@ -222,265 +178,221 @@ Rel(backend, email, "Notifications", "SMTP/API")
 **Rationale**: Python ecosystem excels in AI/ML integration while FastAPI provides excellent API performance.
 
 #### AI & Machine Learning
+- **Pydantic AI**: Agent framework with structured data validation and type safety
 - **LangGraph**: Orchestration framework for complex multi-agent workflows
-- **OpenAI GPT Models**: Advanced natural language processing for financial insights
+- **Groq API Models**: High-performance AI processing for financial insights
+- **Enhanced Agents**: Specialized agents with prefix "enhanced_" for advanced financial analysis
 - **Scikit-learn + XGBoost**: Traditional ML for pattern recognition and predictions
 
-**Rationale**: LangGraph enables sophisticated agent coordination, essential for multi-step financial reasoning.
+**Rationale**: Pydantic AI provides type-safe agent interactions, while LangGraph enables sophisticated multi-agent coordination for complex financial reasoning.
 
 #### Data Layer
-- **PostgreSQL**: ACID compliance, advanced JSON support, full-text search
-- **Redis**: High-performance caching and session management
+- **PostgreSQL**: ACID compliance, advanced JSON support, full-text search, and AI response caching
 - **SQLAlchemy**: Async ORM with migration support
 
-**Rationale**: PostgreSQL handles complex financial calculations and relationships, Redis enables real-time features.
+**Rationale**: PostgreSQL serves as both primary data store and caching layer, simplifying the architecture while maintaining performance.
 
 #### Infrastructure & DevOps
-- **Docker**: Containerization for consistent deployments
 - **Vercel (Frontend)**: Global CDN, automatic scaling
-- **Render (Backend)**: Managed hosting with auto-scaling
-- **Supabase**: Managed PostgreSQL with real-time subscriptions
+- **Render (Backend & Database)**: Managed hosting with auto-scaling and PostgreSQL database
 
-**Rationale**: Serverless-first approach reduces operational overhead while maintaining scalability.
+**Rationale**: Render provides both backend hosting and managed database, simplifying the infrastructure while maintaining scalability.
 
 ### System Boundaries
 
 #### In Scope (Core Platform)
-- Debt portfolio management and analysis
+- Debt portfolio management and analysis (manual data entry)
 - AI-powered repayment strategy optimization
-- Financial insights and recommendations
-- User progress tracking and gamification
-- Basic budgeting and expense tracking
-- Notification and reminder systems
+- Financial insights and recommendations via Groq API
+- User onboarding and profile management
+- Payment tracking and history
+- AI insights caching and background processing
 
 #### External Integrations (APIs)
-- Financial data aggregation (Plaid)
-- AI language models (OpenAI)
-- Email/SMS notifications (SendGrid/Twilio)
+- AI language models (Groq API)
 - Payment processing (future integration)
 - Credit reporting (future integration)
 
 #### Out of Scope (Third-Party Services)
-- Direct bank connections (handled via Plaid)
+- Direct bank connections (manual data entry only)
 - Investment management (separate wealth management features)
 - Tax preparation and filing
 - Insurance management
 - Real estate transactions
-
-#### Security Boundaries
-- User data isolation and encryption
-- API rate limiting and authentication
-- Secure credential management
-- Compliance with financial data regulations
-- Regular security audits and penetration testing
+- Email/SMS notifications (not currently implemented)
 
 ---
 
 ## 3. Project Workings
 
-### Data Flow Diagrams
+### Process Flow Diagrams
 
-#### User Onboarding and Authentication Flow
+#### User Onboarding and Authentication Sequence
 
-```plantuml
-@startuml User Onboarding Flow
-title User Onboarding and Authentication
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant FE as React SPA
+    participant BE as FastAPI Backend
+    participant DB as PostgreSQL
+    participant CA as PostgreSQL Cache
+    participant ON as Onboarding Context
 
-actor User
-participant "React SPA" as Frontend
-participant "FastAPI Backend" as Backend
-participant "PostgreSQL" as DB
-participant "Redis Cache" as Cache
-participant "Onboarding Context" as Onboarding
+    Note over U,ON: Initial Access
+    U->>FE: Visit /auth
+    FE->>BE: GET /api/auth/me
+    BE->>DB: Query user session
+    alt User not authenticated
+        BE-->>FE: 401 Unauthorized
+        FE-->>U: Show login form
+    else User authenticated but not onboarded
+        BE-->>FE: User data
+        FE->>ON: Load onboarding state
+        ON-->>FE: Current step
+        FE-->>U: Redirect to /onboarding
+    end
 
-== Initial Access ==
-User -> Frontend: Visit /auth
-Frontend -> Backend: GET /api/auth/me
-Backend -> DB: Query user session
-alt User not authenticated
-    Backend --> Frontend: 401 Unauthorized
-    Frontend -> User: Show login form
-else User authenticated but not onboarded
-    Backend --> Frontend: User data
-    Frontend -> Onboarding: Load onboarding state
-    Onboarding --> Frontend: Current step
-    Frontend -> User: Redirect to /onboarding
-end
+    Note over U,CA: Registration/Login
+    U->>FE: Submit credentials
+    FE->>BE: POST /api/auth/login
+    BE->>DB: Validate credentials
+    BE->>CA: Store session JWT
+    BE-->>FE: JWT token + user data
+    FE->>ON: Check completion status
 
-== Registration/Login ==
-User -> Frontend: Submit credentials
-Frontend -> Backend: POST /api/auth/login
-Backend -> DB: Validate credentials
-Backend -> Cache: Store session JWT
-Backend --> Frontend: JWT token + user data
-Frontend -> Onboarding: Check completion status
+    Note over ON,U: Onboarding Flow
+    ON-->>FE: Not completed
+    FE-->>U: Start onboarding process
+    U->>FE: Complete onboarding steps
+    FE->>BE: POST /api/onboarding/step
+    BE->>DB: Update onboarding progress
+    BE->>ON: Mark steps complete
 
-== Onboarding Flow ==
-Onboarding -> Frontend: Not completed
-Frontend -> User: Start onboarding process
-User -> Frontend: Complete onboarding steps
-Frontend -> Backend: POST /api/onboarding/step
-Backend -> DB: Update onboarding progress
-Backend -> Onboarding: Mark steps complete
-
-== Dashboard Access ==
-Onboarding -> Frontend: Completed
-Frontend -> User: Redirect to /dashboard
-@enduml
+    Note over ON,U: Dashboard Access
+    ON-->>FE: Completed
+    FE-->>U: Redirect to /dashboard
 ```
 
-#### Debt Data Management Flow
+#### Debt Data Management Sequence
 
-```plantuml
-@startuml Debt Data Management
-title Debt Portfolio Management Flow
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant FE as React SPA
+    participant BE as FastAPI Backend
+    participant DB as PostgreSQL
+    participant AC as AI Cache Service
 
-actor User
-participant "React SPA" as Frontend
-participant "FastAPI Backend" as Backend
-participant "PostgreSQL" as DB
-participant "Plaid API" as Plaid
-participant "AI Cache Service" as AICache
+    Note over U,AC: Manual Debt Entry
+    U->>FE: Add debt manually
+    FE->>BE: POST /api/debts
+    BE->>DB: Insert debt record
+    BE->>AC: Invalidate user cache
+    BE-->>FE: Debt created response
 
-== Manual Debt Entry ==
-User -> Frontend: Add debt manually
-Frontend -> Backend: POST /api/debts
-Backend -> DB: Insert debt record
-Backend -> AICache: Invalidate user cache
-Backend --> Frontend: Debt created response
+    Note over U,AC: Bulk Manual Entry
+    U->>FE: Add multiple debts
+    FE->>BE: POST /api/debts/bulk
+    BE->>DB: Insert multiple debt records
+    BE->>AC: Invalidate user cache
+    BE-->>FE: Bulk import confirmation
 
-== External Data Import ==
-User -> Frontend: Connect bank account
-Frontend -> Plaid: Initiate Link flow
-Plaid -> User: Bank authentication
-User -> Plaid: Provide credentials
-Plaid -> Frontend: Success callback
-Frontend -> Backend: POST /api/debts/import
-Backend -> Plaid: Fetch account data
-Plaid --> Backend: Account transactions
-Backend -> DB: Create debt records
-Backend -> AICache: Invalidate cache
+    Note over U,FE: Debt Updates
+    U->>FE: Update debt details
+    FE->>BE: PUT /api/debts/{id}
+    BE->>DB: Update debt record
+    BE->>AC: Invalidate user insights
+    BE-->>FE: Updated debt data
 
-== Debt Updates ==
-User -> Frontend: Update debt details
-Frontend -> Backend: PUT /api/debts/{id}
-Backend -> DB: Update debt record
-Backend -> AICache: Invalidate user insights
-Backend --> Frontend: Updated debt data
-
-== Debt Deletion ==
-User -> Frontend: Delete debt
-Frontend -> Backend: DELETE /api/debts/{id}
-Backend -> DB: Soft delete debt
-Backend -> AICache: Invalidate cache
-Backend --> Frontend: Deletion confirmation
-@enduml
+    Note over U,FE: Debt Deletion
+    U->>FE: Delete debt
+    FE->>BE: DELETE /api/debts/{id}
+    BE->>DB: Soft delete debt
+    BE->>AC: Invalidate cache
+    BE-->>FE: Deletion confirmation
 ```
 
-#### AI Insights Generation Flow
+#### AI Insights Generation Sequence
 
-```plantuml
-@startuml AI Insights Generation
-title AI Insights and Recommendations Flow
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant FE as React SPA
+    participant BE as FastAPI Backend
+    participant AC as AI Cache Service
+    participant W as AI Processing Worker
+    participant A as Enhanced Debt Optimizer
+    participant DB as PostgreSQL
+    participant Q as Database Queue
+    participant OAI as Groq API
 
-actor User
-participant "React SPA" as Frontend
-participant "FastAPI Backend" as Backend
-participant "AI Cache Service" as AICache
-participant "AI Processing Worker" as Worker
-participant "Debt Optimizer Agent" as Agent
-participant "PostgreSQL" as DB
-participant "Redis Queue" as Queue
-participant "OpenAI API" as OpenAI
+    Note over U,OAI: Insights Request
+    U->>FE: Visit insights page
+    FE->>BE: GET /api/ai/insights
+    BE->>AC: Check cached insights
 
-== Insights Request ==
-User -> Frontend: Visit insights page
-Frontend -> Backend: GET /api/ai/insights
-Backend -> AICache: Check cached insights
-alt Cache hit and valid
-    AICache --> Backend: Return cached data
-    Backend --> Frontend: Insights data
-else Cache miss or stale
-    Backend -> AICache: Queue AI generation
-    AICache -> Queue: Add job to queue
-    AICache --> Backend: Processing status
-    Backend --> Frontend: Processing status
-end
+    alt Cache hit and valid
+        AC-->>BE: Return cached data
+        BE-->>FE: Insights data
+    else Cache miss or stale
+        BE->>AC: Queue AI generation
+        AC->>Q: Add job to queue
+        AC-->>BE: Processing status
+        BE-->>FE: Processing status
+    end
 
-== Background Processing ==
-Worker -> Queue: Poll for jobs
-Queue --> Worker: New insights job
-Worker -> DB: Fetch user debt data
-Worker -> Agent: Initialize debt analysis
-Agent -> OpenAI: Generate debt analysis
-OpenAI --> Agent: Analysis results
-Agent -> OpenAI: Generate recommendations
-OpenAI --> Agent: Recommendation data
-Agent -> Worker: Return insights
-Worker -> AICache: Store insights in cache
-Worker -> DB: Update cache metadata
+    Note over W,OAI: Background Processing
+    W->>Q: Poll for jobs
+    Q-->>W: New insights job
+    W->>DB: Fetch user debt data
+    W->>A: Initialize debt analysis
+    A->>OAI: Generate debt analysis
+    OAI-->>A: Analysis results
+    A->>OAI: Generate recommendations
+    OAI-->>A: Recommendation data
+    A-->>W: Return insights
+    W->>AC: Store insights in cache
+    W->>DB: Update cache metadata
 
-== Results Delivery ==
-Frontend -> Backend: Poll /api/ai/insights/status
-Backend -> AICache: Get processing status
-AICache --> Backend: Completed status
-Backend --> Frontend: Fresh insights data
-Frontend -> User: Display insights
+    Note over FE,U: Results Delivery
+    FE->>BE: Poll /api/ai/insights/status
+    BE->>AC: Get processing status
+    AC-->>BE: Completed status
+    BE-->>FE: Fresh insights data
+    FE-->>U: Display insights
 
-== Cache Management ==
-AICache -> AICache: Check expiration policy
-AICache -> DB: Update access timestamps
-@enduml
+    Note over AC,DB: Cache Management
+    AC->>AC: Check expiration policy
+    AC->>DB: Update access timestamps
 ```
 
 ### User Journey Mapping
 
 #### Primary User Journey: From Debt to Freedom
 
-```plantuml
-@startuml User Journey Map
-title Primary User Journey: Debt Freedom Path
-
-|Discovery|
-:User discovers Debtease
-through search/ads/referral;
-
-|Onboarding|
-:Account creation
-& profile setup;
-
-|Debt Assessment|
-:Manual debt entry
-or bank connection;
-
-|AI Analysis|
-:Receive personalized
-debt analysis & insights;
-
-|Strategy Selection|
-:Choose repayment strategy
-(Avalanche/Snowball/Custom);
-
-|Implementation|
-:Set up payment tracking
-& reminders;
-
-|Progress Tracking|
-:Monitor debt reduction
-& celebrate milestones;
-
-|Optimization|
-:Receive ongoing AI
-recommendations & adjustments;
-
-|Debt Freedom|
-:Achieve debt-free status
-& financial wellness;
-
-|Post-Completion|
-:Transition to wealth building
-& ongoing financial coaching;
-@enduml
+```mermaid
+journey
+    title Primary User Journey: Debt Freedom Path
+    section Discovery
+      User discovers Debtease: 5: User
+    section Onboarding
+      Account creation & profile setup: 4: User
+    section Debt Assessment
+      Manual debt entry or bank connection: 4: User
+    section AI Analysis
+      Receive personalized debt analysis & insights: 5: User
+    section Strategy Selection
+      Choose repayment strategy (Avalanche/Snowball/Custom): 5: User
+    section Implementation
+      Set up payment tracking & reminders: 4: User
+    section Progress Tracking
+      Monitor debt reduction & celebrate milestones: 5: User
+    section Optimization
+      Receive ongoing AI recommendations & adjustments: 4: User
+    section Debt Freedom
+      Achieve debt-free status & financial wellness: 5: User
+    section Post-Completion
+      Transition to wealth building & ongoing coaching: 5: User
 ```
 
 #### Detailed Onboarding Journey
@@ -523,55 +435,122 @@ recommendations & adjustments;
 - Goal progress assessments
 - Emergency fund and savings plan reviews
 
+### Diagram Types and Conventions
+
+#### Flow Diagrams vs Sequence Diagrams
+
+**Flow Diagrams** show high-level process flows, data flows between systems, or user journeys through the application. They emphasize the "what" and "where" of processes.
+
+**Sequence Diagrams** show the chronological order of interactions between different actors, components, or systems. They emphasize the "when" and "how" of specific operations.
+
+**When to Use Each:**
+- **Flow Diagrams**: System architecture, data flow between components, user journeys, business processes
+- **Sequence Diagrams**: API interactions, authentication flows, specific feature implementations, error handling
+
+### System Data Flow Diagrams
+
+#### High-Level Data Flow Architecture
+
+```mermaid
+graph TD
+    %% External Data Sources
+    U[User Input<br/>Web/Mobile App] --> FE[React Frontend<br/>TypeScript + React Query]
+    EXT[External APIs<br/>Future: Plaid, Credit] --> API[FastAPI Backend<br/>Python + Pydantic]
+
+    %% Frontend Layer
+    FE --> API
+    FE --> WS[WebSocket<br/>Real-time Updates]
+
+    %% Backend Processing
+    API --> AUTH[Authentication<br/>JWT + Sessions]
+    API --> DEBT[Debt Operations<br/>CRUD + Validation]
+    API --> PAY[Payment Tracking<br/>History + Allocation]
+    API --> AI[AI Processing<br/>Queue + Cache]
+
+    %% Data Storage
+    AUTH --> DB[(PostgreSQL<br/>User Data)]
+    DEBT --> DB
+    PAY --> DB
+    AI --> CACHE[(AI Cache<br/>PostgreSQL)]
+
+    %% AI Processing Pipeline
+    AI --> QUEUE[Background Queue<br/>Database-based]
+    QUEUE --> WORKER[AI Workers<br/>Enhanced Agents]
+    WORKER --> OAI[Groq API<br/>AI Models]
+    WORKER --> CACHE
+
+    %% Data Relationships
+    DB --> WORKER
+    CACHE --> API
+    OAI --> WORKER
+
+    %% Monitoring & Analytics
+    API --> LOGS[Application Logs<br/>Performance Metrics]
+    WORKER --> METRICS[AI Processing<br/>Metrics & Errors]
+
+    %% Styling
+    classDef external fill:#e8f4f8,stroke:#2e86de,stroke-width:2px
+    classDef frontend fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef backend fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef data fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef ai fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef monitoring fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+
+    class U,EXT external
+    class FE,WS frontend
+    class API,AUTH,DEBT,PAY backend
+    class DB,CACHE data
+    class AI,QUEUE,WORKER,OAI ai
+    class LOGS,METRICS monitoring
+```
+
+**Data Flow Legend:**
+- **Blue (External)**: Data entering the system from users or external services
+- **Light Blue (Frontend)**: Client-side processing and user interface
+- **Purple (Backend)**: Server-side business logic and API processing
+- **Green (Data)**: Persistent data storage and caching layers
+- **Orange (AI)**: AI processing pipeline and external AI services
+- **Pink (Monitoring)**: Observability and performance tracking
+
 ### AI Processing Pipeline
 
 #### Multi-Agent AI Architecture
 
-Debtease employs a sophisticated multi-agent system orchestrated through LangGraph, enabling complex financial reasoning and coordinated decision-making.
+Debtease employs a sophisticated multi-agent system built with **Pydantic AI** and orchestrated through **LangGraph**, enabling complex financial reasoning and coordinated decision-making. The **enhanced agents** provide structured, type-safe financial analysis with professional-grade consultation workflows.
 
-```plantuml
-@startuml AI Agent Orchestration
-title AI Agent Workflow Orchestration
+```mermaid
+sequenceDiagram
+    participant EO as Enhanced Orchestrator
+    participant EDA as Enhanced Debt Analyzer
+    participant EDO as Enhanced Debt Optimizer
+    participant ARA as AI Recommendation Agent
+    participant DTC as DTI Calculator Agent
+    participant GRQ as Groq API
 
-participant "Debt Analyzer Agent" as Analyzer
-participant "Strategy Optimizer Agent" as Optimizer
-participant "Budget Tracker Agent" as Budget
-participant "Recommendation Engine" as Recommender
-participant "LangGraph Orchestrator" as Orchestrator
-participant "OpenAI API" as OpenAI
-database "Knowledge Base" as KB
+    Note over EO,GRQ: Debt Analysis Phase
+    EO->>EDA: Analyze debt portfolio
+    EDA->>GRQ: Generate debt analysis (Pydantic AI)
+    GRQ-->>EDA: Structured analysis results
+    EDA-->>EO: Analysis complete
 
-== Debt Analysis Phase ==
-Orchestrator -> Analyzer: Analyze debt portfolio
-Analyzer -> OpenAI: Generate debt analysis
-OpenAI --> Analyzer: Analysis results
-Analyzer -> KB: Store analysis patterns
-Analyzer --> Orchestrator: Analysis complete
+    Note over EO,GRQ: Strategy Optimization Phase
+    EO->>EDO: Generate strategies
+    EDO->>EDA: Get debt analysis
+    EDO->>GRQ: Optimize repayment plan (Pydantic AI)
+    GRQ-->>EDO: Strategy recommendations
+    EDO-->>EO: Strategies complete
 
-== Strategy Optimization Phase ==
-Orchestrator -> Optimizer: Generate strategies
-Optimizer -> Analyzer: Get debt analysis
-Optimizer -> OpenAI: Optimize repayment plan
-OpenAI --> Optimizer: Strategy recommendations
-Optimizer -> KB: Update strategy models
-Optimizer --> Orchestrator: Strategies complete
+    Note over EO,EO: Recommendation Generation Phase
+    EO->>ARA: Generate AI recommendations
+    ARA->>GRQ: Create personalized advice (Pydantic AI)
+    GRQ-->>ARA: Recommendation data
+    ARA-->>EO: Recommendations complete
 
-== Budget Integration Phase ==
-Orchestrator -> Budget: Assess budget impact
-Budget -> Optimizer: Get strategy details
-Budget -> OpenAI: Analyze budget constraints
-OpenAI --> Budget: Budget recommendations
-Budget --> Orchestrator: Budget assessment
-
-== Recommendation Synthesis ==
-Orchestrator -> Recommender: Synthesize insights
-Recommender -> Analyzer: Get analysis data
-Recommender -> Optimizer: Get strategy data
-Recommender -> Budget: Get budget data
-Recommender -> OpenAI: Generate final recommendations
-OpenAI --> Recommender: Personalized insights
-Recommender --> Orchestrator: Complete insights package
-@enduml
+    Note over EO,EO: DTI Analysis Phase
+    EO->>DTC: Calculate DTI analysis
+    DTC->>GRQ: Process DTI calculations (Pydantic AI)
+    GRQ-->>DTC: DTI analysis results
+    DTC-->>EO: Complete insights package
 ```
 
 #### AI Processing Stages
@@ -603,7 +582,7 @@ Recommender --> Orchestrator: Complete insights package
 #### Intelligent Caching Strategy
 
 **Cache Architecture:**
-- **Multi-Level Caching**: Redis (hot data) + PostgreSQL (persistent cache)
+- **Database Caching**: PostgreSQL-based caching for AI responses and computations
 - **Smart Invalidation**: Event-driven cache updates on debt/portfolio changes
 - **TTL Management**: Time-based expiration with usage-based extension
 - **Compression**: Efficient storage of complex AI-generated content
@@ -628,127 +607,107 @@ Recommender --> Orchestrator: Complete insights package
 
 Debtease's data model centers around Users managing their Debt portfolios through Payments, with AI-driven insights cached for performance. The system supports complex financial relationships while maintaining data integrity and audit trails.
 
-```plantuml
-@startuml ERD Diagram
-!define table(name,desc) class name as "name\n━━━\ndesc" << (T,#FFAAAA) >>
-!define primary_key(name) <b>name</b>
-!define foreign_key(name) <i>name</i>
+```mermaid
+erDiagram
+    users {
+        UUID id PK
+        VARCHAR-255 email
+        VARCHAR-255 full_name
+        VARCHAR-255 hashed_password
+        DECIMAL monthly_income
+        VARCHAR-20 phone_number
+        ENUM income_frequency
+        ENUM employment_status
+        ENUM financial_experience
+        BOOLEAN onboarding_completed
+        BOOLEAN is_verified
+        BOOLEAN is_active
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
+    }
 
-table(users, "User Accounts") {
-  + primary_key(id: UUID)
-  + email: VARCHAR(255)
-  + full_name: VARCHAR(255)
-  + hashed_password: VARCHAR(255)
-  + monthly_income: DECIMAL
-  + phone_number: VARCHAR(20)
-  + income_frequency: ENUM
-  + employment_status: ENUM
-  + financial_experience: ENUM
-  + onboarding_completed: BOOLEAN
-  + is_verified: BOOLEAN
-  + is_active: BOOLEAN
-  + plaid_access_token: VARCHAR(255)
-  + created_at: TIMESTAMP
-  + updated_at: TIMESTAMP
-}
+    debts {
+        UUID id PK
+        UUID user_id FK
+        VARCHAR-255 name
+        ENUM debt_type
+        DECIMAL principal_amount
+        DECIMAL current_balance
+        DECIMAL interest_rate
+        DECIMAL minimum_payment
+        DATE due_date
+        VARCHAR-255 lender
+        ENUM payment_frequency
+        BOOLEAN is_high_priority
+        BOOLEAN is_tax_deductible
+        INTEGER remaining_term_months
+        ENUM source
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
+    }
 
-table(debts, "Debt Portfolio") {
-  + primary_key(id: UUID)
-  + foreign_key(user_id: UUID)
-  + name: VARCHAR(255)
-  + debt_type: ENUM
-  + principal_amount: DECIMAL
-  + current_balance: DECIMAL
-  + interest_rate: DECIMAL
-  + minimum_payment: DECIMAL
-  + due_date: DATE
-  + lender: VARCHAR(255)
-  + payment_frequency: ENUM
-  + is_high_priority: BOOLEAN
-  + is_tax_deductible: BOOLEAN
-  + remaining_term_months: INTEGER
-  + source: ENUM
-  + created_at: TIMESTAMP
-  + updated_at: TIMESTAMP
-}
+    payments {
+        UUID id PK
+        UUID user_id FK
+        UUID debt_id FK
+        DECIMAL amount
+        DATE payment_date
+        DECIMAL principal_portion
+        DECIMAL interest_portion
+        ENUM status
+        TEXT notes
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
+    }
 
-table(payments, "Payment Tracking") {
-  + primary_key(id: UUID)
-  + foreign_key(user_id: UUID)
-  + foreign_key(debt_id: UUID)
-  + amount: DECIMAL
-  + payment_date: DATE
-  + principal_portion: DECIMAL
-  + interest_portion: DECIMAL
-  + status: ENUM
-  + notes: TEXT
-  + created_at: TIMESTAMP
-  + updated_at: TIMESTAMP
-}
+    ai_insights_cache {
+        UUID id PK
+        UUID user_id FK
+        JSONB debt_analysis
+        JSONB recommendations
+        JSONB ai_metadata
+        VARCHAR-255 cache_key
+        TIMESTAMP generated_at
+        TIMESTAMP expires_at
+        INTEGER version
+        VARCHAR-20 status
+        DECIMAL processing_time
+        VARCHAR-100 ai_model_used
+        TEXT error_log
+    }
 
-table(ai_insights_cache, "AI Insights Cache") {
-  + primary_key(id: UUID)
-  + foreign_key(user_id: UUID)
-  + debt_analysis: JSONB
-  + recommendations: JSONB
-  + ai_metadata: JSONB
-  + cache_key: VARCHAR(255)
-  + generated_at: TIMESTAMP
-  + expires_at: TIMESTAMP
-  + version: INTEGER
-  + status: VARCHAR(20)
-  + processing_time: DECIMAL
-  + ai_model_used: VARCHAR(100)
-  + error_log: TEXT
-}
+    ai_processing_queue {
+        UUID id PK
+        UUID user_id FK
+        VARCHAR-50 task_type
+        VARCHAR-20 status
+        INTEGER priority
+        INTEGER attempts
+        INTEGER max_attempts
+        JSONB payload
+        JSONB result
+        TIMESTAMP created_at
+        TIMESTAMP started_at
+        TIMESTAMP completed_at
+    }
 
-table(ai_processing_queue, "Background AI Tasks") {
-  + primary_key(id: UUID)
-  + foreign_key(user_id: UUID)
-  + task_type: VARCHAR(50)
-  + status: VARCHAR(20)
-  + priority: INTEGER
-  + attempts: INTEGER
-  + max_attempts: INTEGER
-  + payload: JSONB
-  + result: JSONB
-  + created_at: TIMESTAMP
-  + started_at: TIMESTAMP
-  + completed_at: TIMESTAMP
-}
+    repayment_plans {
+        UUID id PK
+        UUID user_id FK
+        VARCHAR-50 strategy
+        DECIMAL monthly_payment_amount
+        DECIMAL total_interest_saved
+        DATE expected_completion_date
+        JSONB payment_schedule
+        TIMESTAMP created_at
+    }
 
-table(notification_history, "User Notifications") {
-  + primary_key(id: UUID)
-  + foreign_key(user_id: UUID)
-  + type: VARCHAR(50)
-  + title: VARCHAR(255)
-  + message: TEXT
-  + status: VARCHAR(20)
-  + sent_at: TIMESTAMP
-  + read_at: TIMESTAMP
-}
-
-table(repayment_plans, "AI-Generated Strategies") {
-  + primary_key(id: UUID)
-  + foreign_key(user_id: UUID)
-  + strategy: VARCHAR(50)
-  + monthly_payment_amount: DECIMAL
-  + total_interest_saved: DECIMAL
-  + expected_completion_date: DATE
-  + payment_schedule: JSONB
-  + created_at: TIMESTAMP
-}
-
-' Relationships
-users ||--o{ debts : "manages"
-users ||--o{ payments : "makes"
-users ||--o{ ai_insights_cache : "has cached"
-users ||--o{ ai_processing_queue : "has queued tasks"
-users ||--o{ notification_history : "receives"
-users ||--o{ repayment_plans : "follows"
-
-debts ||--o{ payments : "receives"
-@enduml
+    users ||--o{ debts : manages
+    users ||--o{ payments : makes
+    users ||--o{ ai_insights_cache : "has cached"
+    users ||--o{ ai_processing_queue : "has queued tasks"
+    users ||--o{ repayment_plans : follows
+    debts ||--o{ payments : receives
 ```
 
 ### Core Business Objects
@@ -765,10 +724,11 @@ debts ||--o{ payments : "receives"
 #### Debt Entity
 **Purpose**: Comprehensive debt portfolio tracking with financial details
 **Key Attributes**:
+- **Source**: Currently always 'manual' (manual data entry only, no bank integrations yet)
 - **Financial Details**: Principal, balance, interest rate, minimum payments
 - **Classification**: Debt type, priority level, tax deductibility
 - **Scheduling**: Due dates, payment frequency, remaining term
-- **Metadata**: Lender information, source (manual vs. imported), notes
+- **Metadata**: Lender information, notes
 
 #### Payment Entity
 **Purpose**: Detailed payment tracking with principal/interest breakdown
@@ -786,104 +746,100 @@ debts ||--o{ payments : "receives"
 - **Performance Metrics**: Processing time, model used, error logging
 - **Invalidation Logic**: Hash-based cache key for automatic updates
 
+#### AI Processing Queue Entity
+**Purpose**: Background job management for asynchronous AI processing tasks
+**Key Attributes**:
+- **Job Management**: Task type, status, priority, retry logic (attempts/max_attempts)
+- **Data Payload**: JSONB storage for flexible job parameters and results
+- **Implementation**: PostgreSQL-based queue system for reliable background processing
+- **Audit Trail**: Creation, start, and completion timestamps for monitoring
+
 ### Data Flow Between Components
 
 #### User Registration → Onboarding → Dashboard Access
 
-```plantuml
-@startuml Data Flow: User Onboarding
-title User Onboarding Data Flow
+```mermaid
+sequenceDiagram
+    participant U as New User
+    participant FE as Frontend (React)
+    participant API as Backend API
+    participant DB as PostgreSQL
+    participant C as Onboarding Context
 
-actor "New User" as User
-participant "Frontend (React)" as FE
-participant "Backend API" as API
-participant "PostgreSQL" as DB
-participant "Onboarding Context" as Context
+    Note over U,C: Account Creation
+    U->>FE: Submit registration form
+    FE->>API: POST /api/auth/register
+    API->>DB: INSERT users record
+    DB-->>API: User created
+    API-->>FE: JWT token + user profile
 
-== Account Creation ==
-User -> FE: Submit registration form
-FE -> API: POST /api/auth/register
-API -> DB: INSERT users record
-DB --> API: User created
-API -> FE: JWT token + user profile
+    Note over FE,DB: Profile Enrichment
+    FE->>C: Load onboarding state
+    C->>API: GET /api/onboarding/status
+    API->>DB: Query user onboarding data
+    DB-->>API: Onboarding status
+    API-->>FE: Onboarding progress
 
-== Profile Enrichment ==
-FE -> Context: Load onboarding state
-Context -> API: GET /api/onboarding/status
-API -> DB: Query user onboarding data
-DB --> API: Onboarding status
-API -> FE: Onboarding progress
+    Note over U,FE: Debt Portfolio Setup
+    U->>FE: Add first debt
+    FE->>API: POST /api/debts
+    API->>DB: INSERT debts record
+    API-->>FE: Debt added confirmation
 
-== Debt Portfolio Setup ==
-User -> FE: Add first debt
-FE -> API: POST /api/debts
-API -> DB: INSERT debts record
-API -> FE: Debt added confirmation
-
-== AI Analysis Trigger ==
-API -> API: Check AI insights cache
-API -> DB: Cache miss - queue AI job
-DB --> API: Job queued
-API -> FE: Redirect to dashboard
-@enduml
+    Note over API,DB: AI Analysis Trigger
+    API->>API: Check AI insights cache
+    API->>DB: Cache miss - queue AI job
+    DB-->>API: Job queued
+    API-->>FE: Redirect to dashboard
 ```
 
 #### Payment Processing → Debt Updates → AI Insights Refresh
 
-```plantuml
-@startuml Data Flow: Payment Processing
-title Payment Processing & Debt Updates
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant FE as Frontend
+    participant API as Backend API
+    participant DB as PostgreSQL
+    participant AC as AI Cache Service
+    participant Q as Database Queue
 
-actor "User" as User
-participant "Frontend" as FE
-participant "Backend API" as API
-participant "PostgreSQL" as DB
-participant "AI Cache Service" as AICache
-participant "Redis Queue" as Queue
+    Note over U,DB: Payment Recording
+    U->>FE: Record new payment
+    FE->>API: POST /api/payments
+    API->>DB: INSERT payment record
+    API->>DB: UPDATE debt current_balance
+    DB-->>API: Payment processed
 
-== Payment Recording ==
-User -> FE: Record new payment
-FE -> API: POST /api/payments
-API -> DB: INSERT payment record
-API -> DB: UPDATE debt current_balance
-DB --> API: Payment processed
+    Note over API,Q: Cache Invalidation
+    API->>AC: Invalidate user insights
+    AC->>DB: Mark cache as stale
+    AC->>Q: Queue AI refresh job
+    Q-->>AC: Job queued
 
-== Cache Invalidation ==
-API -> AICache: Invalidate user insights
-AICache -> DB: Mark cache as stale
-AICache -> Queue: Queue AI refresh job
-Queue --> AICache: Job queued
+    Note over AC,DB: Background AI Refresh
+    AC->>Q: Poll for refresh jobs
+    Q-->>AC: New refresh job
+    AC->>DB: Fetch updated debt data
+    AC->>AC: Generate new cache key
+    AC->>DB: Store fresh insights
+    DB-->>AC: Cache updated
 
-== Background AI Refresh ==
-AICache -> Queue: Poll for refresh jobs
-Queue --> AICache: New refresh job
-AICache -> DB: Fetch updated debt data
-AICache -> AICache: Generate new cache key
-AICache -> DB: Store fresh insights
-DB --> AICache: Cache updated
-
-== UI Updates ==
-FE -> API: GET /api/dashboard/summary
-API -> DB: Fetch updated debt summary
-API -> FE: Updated dashboard data
-@enduml
+    Note over FE,FE: UI Updates
+    FE->>API: GET /api/dashboard/summary
+    API->>DB: Fetch updated debt summary
+    API-->>FE: Updated dashboard data
 ```
 
 ### Caching Data Structures
 
-#### Multi-Level Cache Architecture
+#### PostgreSQL-Based Cache Architecture
 
-**Level 1: Redis (Hot Cache)**
-- **Purpose**: Ultra-fast access for frequently requested data
-- **TTL**: 15-60 minutes for volatile data
-- **Content**: User sessions, API responses, temporary computations
-- **Invalidation**: Event-driven (user actions, time-based)
-
-**Level 2: PostgreSQL (Persistent Cache)**
-- **Purpose**: Long-term storage of expensive computations
-- **TTL**: 7 days for AI insights, 30 days for static data
-- **Content**: AI-generated insights, complex analytics, user preferences
-- **Invalidation**: Hash-based (debt portfolio changes) + time-based
+**Primary Cache Layer: PostgreSQL**
+- **Purpose**: Single unified caching layer for all cached data
+- **TTL**: 7 days for AI insights, configurable for other data types
+- **Content**: AI-generated insights, user preferences, computational results
+- **Invalidation**: Hash-based (debt portfolio changes) + time-based expiration
 
 #### Cache Key Generation Strategy
 
@@ -915,10 +871,10 @@ def generate_cache_key(user_id: UUID, debt_portfolio: List[Dict]) -> str:
 
 #### Cache Performance Metrics
 
-- **Hit Rate Target**: >85% for AI insights
-- **Average Response Time**: <100ms for cached data
-- **Cache Size Management**: Automatic cleanup of expired entries
-- **Background Refresh**: Proactive cache warming for active users
+- **Hit Rate Target**: >80% for AI insights (PostgreSQL-based)
+- **Average Response Time**: <200ms for cached AI responses
+- **Cache Size Management**: Automatic cleanup of expired entries via database triggers
+- **Storage Efficiency**: JSONB columns for flexible AI response storage
 
 ---
 
@@ -926,54 +882,104 @@ def generate_cache_key(user_id: UUID, debt_portfolio: List[Dict]) -> str:
 
 ### AI Agent Architecture
 
-Debtease implements a sophisticated multi-agent AI system orchestrated through LangGraph, enabling complex financial reasoning and coordinated decision-making across specialized agents.
+Debtease implements a sophisticated multi-agent AI system using **Pydantic AI** for structured agent interactions and **LangGraph** for orchestration, enabling complex financial reasoning and coordinated decision-making across specialized agents.
+
+#### Enhanced Agent Components
+
+The system features **enhanced agents** (prefixed with "enhanced_") built with Pydantic AI that provide structured, type-safe financial analysis:
+
+**1. Enhanced Debt Analyzer (`enhanced_debt_analyzer.py`)**
+- **Framework**: Pydantic AI with Groq models
+- **Purpose**: Comprehensive debt portfolio analysis with structured outputs
+- **Key Features**:
+  - Multi-dimensional debt assessment
+  - Interest rate optimization analysis
+  - Risk evaluation and prioritization
+  - Type-safe result validation
+
+**2. Enhanced Debt Optimizer (`enhanced_debt_optimizer.py`)**
+- **Framework**: Pydantic AI with structured strategy generation
+- **Purpose**: Mathematical optimization with AI-enhanced reasoning
+- **Key Features**:
+  - Avalanche vs. Snowball strategy comparison
+  - Custom hybrid strategy development
+  - Risk-adjusted recommendations
+  - Timeline projections and savings calculations
+
+**3. Enhanced Orchestrator (`enhanced_orchestrator.py`)**
+- **Framework**: Pydantic AI coordination layer
+- **Purpose**: Professional AI consultation workflow management
+- **Key Features**:
+  - Multi-agent coordination with structured data flow
+  - Type-safe result aggregation and validation
+  - Repository layer integration for data persistence
+  - Performance monitoring and comprehensive error handling
+
+**Additional Enhanced Agents:**
+- **AI Recommendation Agent**: Generates personalized financial advice
+- **DTI Calculator Agent**: Calculates debt-to-income ratios and analysis
+- **Test Enhanced Agents**: Comprehensive testing suite for agent validation
+
+#### Pydantic AI Framework Implementation
+
+The enhanced agents leverage **Pydantic AI** for:
+
+**Structured Data Validation:**
+```python
+class DebtAnalysisResult(BaseModel):
+    """Type-safe debt analysis results."""
+    total_debt: float
+    debt_count: int
+    average_interest_rate: float
+    # ... with full type validation
+```
+
+**Agent Configuration:**
+```python
+# Groq model integration with Pydantic AI
+agent = Agent(
+    model=GroqModel(settings.GROQ_MODEL),
+    result_type=DebtAnalysisResult,
+    deps_type=AnalysisDependencies
+)
+```
+
+**Type-Safe Agent Interactions:**
+- Structured input/output validation
+- Automatic error handling and retries
+- Dependency injection for data access
+- Result type enforcement for API compatibility
 
 #### LangGraph Orchestration Framework
 
-```plantuml
-@startuml LangGraph Orchestration
-title LangGraph Workflow State Machine
+```mermaid
+stateDiagram-v2
+    [*] --> Load
+    Load --> Analyze : No cached analysis
+    Load --> Optimize : Cached analysis exists
 
-state "Load Analysis" as Load
-state "Analyze Debts" as Analyze
-state "Optimize Strategy" as Optimize
-state "Generate Recommendations" as Recommend
-state "Final Synthesis" as Synthesize
+    Analyze --> Optimize : Analysis complete
+    Optimize --> Recommend : Strategy optimized
+    Recommend --> Synthesize : Recommendations generated
+    Synthesize --> [*] : Complete
 
-[*] --> Load
-Load --> Analyze : No cached analysis
-Load --> Optimize : Cached analysis exists
+    Load --> [*] : Error
+    Analyze --> [*] : Error
+    Optimize --> [*] : Error
+    Recommend --> [*] : Error
+    Synthesize --> [*] : Error
 
-Analyze --> Optimize : Analysis complete
-Optimize --> Recommend : Strategy optimized
-Recommend --> Synthesize : Recommendations generated
-Synthesize --> [*] : Complete
+    note right of Load
+        Load cached analysis<br/>or prepare for fresh generation
+    end note
 
-Load --> [*] : Error
-Analyze --> [*] : Error
-Optimize --> [*] : Error
-Recommend --> [*] : Error
-Synthesize --> [*] : Error
+    note right of Analyze
+        Multi-dimensional debt analysis:<br/>- Interest optimization<br/>- Cash flow assessment<br/>- Risk evaluation
+    end note
 
-note right of Load
-  Load cached analysis
-  or prepare for fresh generation
-end note
-
-note right of Analyze
-  Multi-dimensional debt analysis:
-  - Interest optimization
-  - Cash flow assessment
-  - Risk evaluation
-end note
-
-note right of Optimize
-  Strategy comparison:
-  - Avalanche vs Snowball
-  - Custom hybrid approaches
-  - Risk-adjusted weighting
-end note
-@enduml
+    note right of Optimize
+        Strategy comparison:<br/>- Avalanche vs Snowball<br/>- Custom hybrid approaches<br/>- Risk-adjusted weighting
+    end note
 ```
 
 #### Specialized AI Agent Components
@@ -995,7 +1001,7 @@ class DebtAnalyzingAgent:
         4. Debt consolidation potential
         5. Long-term financial impact projections
         """
-        # Implementation uses OpenAI for complex reasoning
+        # Implementation uses Groq API for complex reasoning
         # Structured prompts for consistent analysis output
         # Validation of financial calculations
         pass
@@ -1024,145 +1030,139 @@ class DebtOptimizerAgent:
         pass
 ```
 
-### Sequence Diagrams
+### Detailed Sequence Diagrams
 
 #### AI Insights Generation Sequence
 
-```plantuml
-@startuml AI Insights Generation Sequence
-title Complete AI Insights Generation Workflow
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant FE as React Frontend
+    participant API as FastAPI Backend
+    participant CS as AI Cache Service
+    participant W as AI Processing Worker
+    participant A as Debt Analyzer Agent
+    participant SO as Strategy Optimizer Agent
+    participant RE as Recommendation Engine
+    participant OAI as Groq API
+    participant DB as PostgreSQL
+    participant Q as Database Queue
 
-actor "User" as User
-participant "React Frontend" as FE
-participant "FastAPI Backend" as API
-participant "AI Cache Service" as CacheSvc
-participant "AI Processing Worker" as Worker
-participant "Debt Analyzer Agent" as Analyzer
-participant "Strategy Optimizer Agent" as Optimizer
-participant "Recommendation Engine" as Recommender
-participant "OpenAI API" as OpenAI
-database "PostgreSQL" as DB
-database "Redis Queue" as Queue
+    Note over U,OAI: Initial Request
+    U->>FE: Navigate to insights page
+    FE->>API: GET /api/ai/insights
+    API->>CS: Check cached insights
+    CS->>DB: Query ai_insights_cache
 
-== Initial Request ==
-User -> FE: Navigate to insights page
-FE -> API: GET /api/ai/insights
-API -> CacheSvc: Check cached insights
-CacheSvc -> DB: Query ai_insights_cache
+    alt Cache Hit
+        DB-->>CS: Return cached data
+        CS-->>API: Insights data
+        API-->>FE: Insights data (cached)
+    else Cache Miss
+        API->>CS: Queue AI generation
+        CS->>Q: Add insights job
+        Q-->>CS: Job queued
+        API-->>FE: Processing status
+    end
 
-alt Cache Hit
-    DB --> CacheSvc: Return cached data
-    CacheSvc --> API: Insights data
-    API --> FE: Insights data (cached)
-else Cache Miss
-    API -> CacheSvc: Queue AI generation
-    CacheSvc -> Queue: Add insights job
-    Queue --> CacheSvc: Job queued
-    API --> FE: Processing status
-end
+    Note over W,W: Background Processing
+    W->>Q: Poll for jobs
+    Q-->>W: New insights job
+    W->>DB: Fetch user debt data
+    W->>A: Initialize analysis
 
-== Background Processing ==
-Worker -> Queue: Poll for jobs
-Queue --> Worker: New insights job
-Worker -> DB: Fetch user debt data
-Worker -> Analyzer: Initialize analysis
+    Note over A,W: Debt Analysis Phase
+    A->>OAI: Generate debt analysis
+    OAI-->>A: Analysis results
+    A-->>W: Analysis complete
 
-== Debt Analysis Phase ==
-Analyzer -> OpenAI: Generate debt analysis
-OpenAI --> Analyzer: Analysis results
-Analyzer -> Worker: Analysis complete
+    Note over W,W: Strategy Optimization Phase
+    W->>SO: Generate strategies
+    SO->>A: Get analysis data
+    SO->>OAI: Optimize repayment plan
+    OAI-->>SO: Strategy recommendations
+    SO-->>W: Strategies complete
 
-== Strategy Optimization Phase ==
-Worker -> Optimizer: Generate strategies
-Optimizer -> Analyzer: Get analysis data
-Optimizer -> OpenAI: Optimize repayment plan
-OpenAI --> Optimizer: Strategy recommendations
-Optimizer -> Worker: Strategies complete
+    Note over W,W: Recommendation Generation Phase
+    W->>RE: Synthesize recommendations
+    RE->>A: Get analysis data
+    RE->>SO: Get strategy data
+    RE->>OAI: Generate personalized advice
+    OAI-->>RE: Recommendation data
+    RE-->>W: Recommendations complete
 
-== Recommendation Generation Phase ==
-Worker -> Recommender: Synthesize recommendations
-Recommender -> Analyzer: Get analysis data
-Recommender -> Optimizer: Get strategy data
-Recommender -> OpenAI: Generate personalized advice
-OpenAI --> Recommender: Recommendation data
-Recommender -> Worker: Recommendations complete
+    Note over W,Q: Storage and Delivery
+    W->>DB: Store insights in cache
+    DB-->>W: Cache stored
+    W->>Q: Mark job complete
 
-== Storage and Delivery ==
-Worker -> DB: Store insights in cache
-DB --> Worker: Cache stored
-Worker -> Queue: Mark job complete
-
-== User Receives Results ==
-FE -> API: Poll /api/ai/insights/status
-API -> CacheSvc: Get processing status
-CacheSvc -> DB: Check completion
-DB --> CacheSvc: Completed
-CacheSvc --> API: Fresh insights
-API --> FE: Complete insights data
-FE -> User: Display AI insights
-@enduml
+    Note over FE,U: User Receives Results
+    FE->>API: Poll /api/ai/insights/status
+    API->>CS: Get processing status
+    CS->>DB: Check completion
+    DB-->>CS: Completed
+    CS-->>API: Fresh insights
+    API-->>FE: Complete insights data
+    FE-->>U: Display AI insights
 ```
 
 #### Authentication and Authorization Flow
 
-```plantuml
-@startuml Authentication Sequence
-title JWT-Based Authentication Flow
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant FE as React Frontend
+    participant API as FastAPI Backend
+    participant DB as PostgreSQL
+    participant R as PostgreSQL Cache
 
-actor "User" as User
-participant "React Frontend" as FE
-participant "FastAPI Backend" as API
-participant "PostgreSQL" as DB
-participant "Redis Cache" as Redis
+    Note over U,R: Login Process
+    U->>FE: Submit login credentials
+    FE->>API: POST /api/auth/login
+    API->>DB: Query user by email
+    DB-->>API: User record with hashed password
 
-== Login Process ==
-User -> FE: Submit login credentials
-FE -> API: POST /api/auth/login
-API -> DB: Query user by email
-DB --> API: User record with hashed password
+    API->>API: Verify password hash
+    alt Password valid
+        API->>API: Generate JWT token
+        API->>R: Store session data
+        R-->>API: Session stored
+        API->>DB: Update last login
+        API-->>FE: JWT token + user profile
+        FE->>FE: Store JWT in localStorage
+    else Password invalid
+        API-->>FE: 401 Unauthorized
+    end
 
-API -> API: Verify password hash
-alt Password valid
-    API -> API: Generate JWT token
-    API -> Redis: Store session data
-    Redis --> API: Session stored
-    API -> DB: Update last login
-    API --> FE: JWT token + user profile
-    FE -> FE: Store JWT in localStorage
-else Password invalid
-    API --> FE: 401 Unauthorized
-end
+    Note over FE,U: Protected API Access
+    FE->>API: GET /api/protected-endpoint
+    Note right of FE: Include JWT in Authorization header
+    API->>API: Decode and validate JWT
+    API->>R: Verify session validity
+    R-->>API: Session valid
 
-== Protected API Access ==
-FE -> API: GET /api/protected-endpoint
-note right: Include JWT in Authorization header
-API -> API: Decode and validate JWT
-API -> Redis: Verify session validity
-Redis --> API: Session valid
+    alt Session valid
+        API->>DB: Fetch user data
+        DB-->>API: User data
+        API-->>FE: Protected resource
+    else Session invalid
+        API-->>FE: 401 Unauthorized
+        FE-->>U: Redirect to login
+    end
 
-alt Session valid
-    API -> DB: Fetch user data
-    DB --> API: User data
-    API --> FE: Protected resource
-else Session invalid
-    API --> FE: 401 Unauthorized
-    FE -> User: Redirect to login
-end
+    Note over FE,FE: Token Refresh
+    FE->>API: POST /api/auth/refresh
+    API->>API: Validate refresh token
+    API->>API: Generate new JWT pair
+    API->>R: Update session
+    API-->>FE: New tokens
 
-== Token Refresh ==
-FE -> API: POST /api/auth/refresh
-API -> API: Validate refresh token
-API -> API: Generate new JWT pair
-API -> Redis: Update session
-API --> FE: New tokens
-
-== Logout ==
-User -> FE: Click logout
-FE -> API: POST /api/auth/logout
-API -> Redis: Invalidate session
-API --> FE: Logout confirmation
-FE -> FE: Clear localStorage
-@enduml
+    Note over U,FE: Logout
+    U->>FE: Click logout
+    FE->>API: POST /api/auth/logout
+    API->>R: Invalidate session
+    API-->>FE: Logout confirmation
+    FE->>FE: Clear localStorage
 ```
 
 ---
@@ -1193,37 +1193,46 @@ FE -> FE: Clear localStorage
 #### Core API Endpoints
 
 **Authentication (`/api/auth`)**
-- `POST /login` - User authentication
 - `POST /register` - User registration
-- `POST /refresh` - Token refresh
-- `POST /logout` - User logout
+- `POST /auth/login/form` - User authentication (form-encoded)
 - `GET /me` - Current user profile
+- `GET /verify-session` - Verify session validity
+- `POST /extend-session` - Extend session duration
+- `POST /logout` - User logout
 
 **Debt Management (`/api/debts`)**
-- `GET /` - List user debts
+- `GET /` - List user debts (with `active_only` filter)
 - `POST /` - Create new debt
+- `GET /{id}` - Get specific debt details
 - `PUT /{id}` - Update debt
-- `DELETE /{id}` - Delete debt
-- `POST /import` - Bulk import from Plaid
+- `GET /summary` - Get debt portfolio summary
+- `GET /high-priority` - Get high priority debts
+- `POST /{id}/payment` - Record payment for specific debt
+- `GET /reminders` - Get payment reminders
 
-**Payment Tracking (`/api/payments`)**
-- `GET /` - List payment history
-- `POST /` - Record new payment
-- `PUT /{id}` - Update payment
-- `DELETE /{id}` - Delete payment
+**Payment Management (`/api/payments`)**
+- `GET /history` - List payment history (with optional `debt_id` filter)
 
 **AI Insights (`/api/ai`)**
-- `GET /insights` - Get AI-generated insights
-- `POST /insights` - Generate fresh insights
+- `GET /insights` - Get cached AI-generated insights
+- `GET /insights/enhanced` - Get enhanced AI insights
+- `GET /insights/status` - Get AI insights processing status
+- `POST /insights/refresh` - Force refresh AI insights
+- `DELETE /insights/cache` - Invalidate AI insights cache
+- `GET /recommendations` - Get AI-generated recommendations
 - `GET /strategies/compare` - Compare repayment strategies
+- `GET /dti` - Get Debt-to-Income analysis
+- `POST /simulate` - Run payment scenario simulations
 - `GET /timeline` - Generate payment timeline
 - `POST /optimize` - Calculate optimization metrics
-- `POST /simulate` - Run payment scenario simulations
+- `GET /queue/status` - Get AI processing queue status
 
 **Onboarding (`/api/onboarding`)**
+- `POST /start` - Start onboarding process
 - `GET /status` - Get onboarding progress
-- `POST /step` - Complete onboarding step
-- `PUT /profile` - Update user profile
+- `POST /profile` - Update user profile during onboarding
+- `POST /goals` - Set user financial goals
+- `POST /complete` - Complete onboarding process
 
 #### Response Status Codes
 - `200` - Success
@@ -1240,60 +1249,70 @@ FE -> FE: Clear localStorage
 
 #### Production Infrastructure
 
-```plantuml
-@startuml Production Deployment
-!include <aws/common>
-!include <aws/Storage/AmazonS3/AmazonS3>
-!include <aws/Compute/EC2>
-!include <aws/Database/RDS>
-!include <aws/Network/ELB>
+```mermaid
+graph TB
+    %% External Services
+    GRQ[Groq API<br/>AI Processing Service]
 
-Vercel(Vercel, "Frontend Hosting", "Global CDN")
-Render(Render, "Backend Hosting", "Managed FastAPI")
-Supabase(Supabase, "Database Hosting", "PostgreSQL + Auth")
+    %% Production Infrastructure
+    subgraph "Frontend Layer"
+        V[Vercel<br/>Global CDN<br/>Edge Caching<br/>Auto-scaling]
+    end
 
-ELB(LoadBalancer, "API Gateway", "Request Routing")
-EC2(Worker, "AI Workers", "Background Processing")
+    subgraph "Load Balancing"
+        LB[API Gateway<br/>Request Routing<br/>Traffic Distribution]
+    end
 
-Vercel --> LoadBalancer : API Calls
-LoadBalancer --> Render : Route to Backend
-Render --> Supabase : Database Queries
-Render --> EC2 : Queue Jobs
-EC2 --> Supabase : Cache Storage
-EC2 --> OpenAI : AI Processing
+    subgraph "Backend Layer"
+        R[Render<br/>Managed FastAPI<br/>Auto-scaling Containers<br/>Built-in Monitoring]
+    end
 
-note right of Vercel
-  Global CDN deployment
-  Automatic scaling
-  Edge caching
-end note
+    subgraph "Database Layer"
+        S[Render PostgreSQL<br/>Managed Database<br/>AI Response Caching<br/>High Availability]
+    end
 
-note right of Render
-  Auto-scaling containers
-  Managed PostgreSQL
-  Built-in monitoring
-end note
-@enduml
+    subgraph "Worker Layer"
+        W[AI Workers<br/>Background Processing<br/>Queue Management<br/>Async Tasks]
+    end
+
+    %% Data Flow
+    V --> LB
+    LB --> R
+    R --> S
+    R --> W
+    W --> S
+    W --> OAI
+
+    %% Notes
+    classDef frontend fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef backend fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef database fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef worker fill:#fff3e0,stroke:#e65100,stroke-width:2px
+
+    class V frontend
+    class R,LB backend
+    class S database
+    class W worker
 ```
 
 #### Environment Configuration
 
 **Development Environment:**
 - Local PostgreSQL database
-- Redis for caching and queues
-- Direct OpenAI API access
+- PostgreSQL for AI response caching
+- Direct Groq API access
 - File-based logging
 
 **Staging Environment:**
 - Render PostgreSQL (smaller instance)
-- Redis Cloud (shared)
-- OpenAI API with rate limits
+- PostgreSQL-based caching and queues
+- Groq API with rate limits
 - Structured logging to external service
 
 **Production Environment:**
-- Supabase PostgreSQL (production tier)
-- Redis Cloud (dedicated)
-- OpenAI API with enterprise limits
+- Render PostgreSQL (production tier)
+- PostgreSQL-based caching and queues
+- Groq API with enterprise limits
 - Comprehensive monitoring and alerting
 
 #### Scaling Strategy
@@ -1302,10 +1321,10 @@ end note
 - **Frontend**: Vercel's global CDN handles traffic spikes
 - **Backend**: Render auto-scaling based on CPU/memory usage
 - **AI Workers**: Configurable worker pool size
-- **Database**: Supabase connection pooling
+- **Database**: Render PostgreSQL connection pooling
 
 **Performance Optimization:**
-- **Caching**: Multi-level caching reduces database load
+- **Caching**: PostgreSQL-based caching reduces API calls
 - **CDN**: Static assets served globally
 - **Compression**: API responses compressed
 - **Background Processing**: Expensive operations moved off critical path
@@ -1360,10 +1379,10 @@ end note
 - Fallback mechanisms for AI failures
 
 **Database Bottlenecks:**
-- Connection pooling
-- Query optimization and indexing
-- Read replicas for analytics
-- Caching layer for frequent queries
+- Connection pooling and prepared statements
+- Query optimization and strategic indexing
+- JSONB indexing for AI cache queries
+- Efficient caching directly in PostgreSQL
 
 **Frontend Bottlenecks:**
 - CDN for static assets
@@ -1373,7 +1392,7 @@ end note
 
 ---
 
-**Document Version:** 0.1  
-**Last Updated:** December 2025  
-**Authors:** Debtease Development Team  
-**Review Status:** Draft Complete - Ready for Review
+**Document Version:** 0.3
+**Last Updated:** December 2025
+**Authors:** Debtease Development Team
+**Review Status:** Updated with Pydantic AI Agent Details
