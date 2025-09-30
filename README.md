@@ -2,6 +2,12 @@
 
 Debtease is a comprehensive, AI-driven debt management and financial wellness platform designed to help users take control of their financial lives. Built with cutting-edge technology and a user-centric approach, Debtease combines intelligent debt analysis, personalized repayment strategies, and wealth-building guidance to create a holistic financial management experience.
 
+## 📹 Demo
+
+[![Debtease Demo](https://img.youtube.com/vi/1m9DOXOFBMA/0.jpg)](https://youtu.be/1m9DOXOFBMA?si=3hbAsywJ7gORllul)
+
+*Click the image above to watch a comprehensive demo of Debtease's AI-powered debt management features.*
+
 ## 🌟 Overview
 
 Debtease is more than just a debt tracking app—it's your intelligent financial companion that:
